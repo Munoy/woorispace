@@ -1,0 +1,54 @@
+#wrapper {width:96%; max-width:1000px; margin:30px auto; font-family:'Nanum Gothic', sans-serif; font-size:15px; color:#444;}
+ul {list-style-type:none; margin:0; padding:0;}
+ul li {*font-size:14px;}
+.title {font-size:29px; letter-spacing:-1.8px; font-weight:600; text-align:center; margin:0 0 30px;}
+#wrapper #print_table_00 .btn {margin:0 0 10px; text-align:right;}
+#wrapper #print_table_00 .btn a {display:inline-block; text-decoration:none; padding:3px 20px; line-height:30px; background:#f9f9f9; border: 1px solid #999; color:#444; font-size:14px; font-weight:600;}
+#wrapper #print_table_00 .btn a:hover {*background:#333; border:1px solid #000; color:#000;}
+#wrapper #print_table_00 .btn a.on {background:#333; border:1px solid #000; color:#fff;}
+
+.wrapper_table {width:100%; border:1px solid #000; border-collapse:collapse; letter-spacing:-0.5px; }
+.wrapper_table tr {border-top:1px solid #000;}
+.wrapper_table tr th {padding:13px 20px; text-align:left;  font-weight:600; border-right:1px solid #000; color:#000;}
+.wrapper_table tr td {padding:13px 15px; }
+.wrapper_table tr td p {font-size:13px; margin:5px 0 0;}
+.wrapper_table select {border:1px solid #aaa;  line-height:32px; height:32px; font-size:14px; color:#666; letter-spacing:-0.75px; padding-left:5px; min-width:150px;}
+.wrapper_table input[type="text"] {border:1px solid #aaa; line-height:30px; height:30px; padding:0 5px; font-size:14px; color:#666; letter-spacing:-0.75px; }
+.wrapper_table button {line-height:32px; height:32px; padding:0 5px; border:1px solid #aaa;}
+
+.wrapper_box {margin:20px 0; border:1px solid #000; padding:30px 30px;}
+.wrapper_box ul li {margin-bottom:15px; font-size:15px; }
+.wrapper_box .gtd {font-size:17px; font-weight:600; margin:0 0 15px; color:#000; letter-spacing:-0.75px;}
+
+.wrapper_box table.table_01 {width:100%; margin:15px auto; border:1px solid #666; border-collapse:collapse; letter-spacing:-0.5px; text-align:center; }
+.wrapper_box table.table_01 tr { border-bottom:1px solid #666;}
+.wrapper_box table.table_01 th {padding:12px 0; border-left:1px solid #666; background:#f7f7f7; font-weight:500;}
+.wrapper_box table.table_01 td {padding:12px 0; border-left:1px solid #666; letter-spacing: 0px;}
+.wrapper_box table.table_02 {width:80%; margin:15px auto; border:none; border-collapse:collapse;}
+.wrapper_box table.table_02 td {padding:10px 0; letter-spacing: 0px;}
+
+.explain {padding:0 10px;}
+.explain ul li {margin-bottom:15px; font-size:15px;}
+
+.explain .box {margin-top:50px;}
+.explain .box .t1 {position:relative; font-size:16px; font-weight:600; margin:0 0 20px; color:#333; letter-spacing:-0.75px; padding-left:22px;}
+.explain .box .t1:before {
+    content: '';
+    position: absolute; top: 0; left: 0; display: block; margin:4px 0 0; width: 14px; height: 14px; background-color:#444; vertical-align: top;
+}
+.explain .box ul li {margin-bottom:18px; font-size:14px;}
+.explain .box p {margin:0 0 5px; padding:0;}
+.explain .box span {display:block; font-size:13px; margin:0 0 2px; margin-left:20px; color:#777;}
+.explain .box img {margin:20px 0 0;}
+
+.explain .box table {width:100%; border:1px solid #999; border-collapse:collapse; letter-spacing:-0.5px; font-size:14px; color:#666;}
+.explain .box table tr {border-top:1px solid #999;}
+.explain .box table tr th {padding:13px 20px;  font-weight:600; border-right:1px solid #999; background-color:#f9f9f9; color:#666; text-align:center; }
+.explain .box table tr td {padding:13px 15px; border-right:1px solid #999; text-align:center; font-size:11px;}
+
+#additional_work_list { }
+
+#pagePrint {width:100%; height:40px; text-align:center; line-height:40px; background-color:#333; color:#fff; border:0px; cursor:pointer;}
+
+.red {color:#fa4848;}
+.mt20 {margin-top:20px;}
