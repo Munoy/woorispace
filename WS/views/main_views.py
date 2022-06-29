@@ -3,6 +3,7 @@ from typing import Any
 from flask import Blueprint, render_template, url_for, request, jsonify
 from werkzeug.utils import redirect
 import json
+import math
 
 bp = Blueprint('main', __name__, url_prefix='/')
 
@@ -582,14 +583,18 @@ def cal():
     else:  # 5000억원 이상 ======================
         () # 24
 
-    rate_result = type_rate_min - ((cstrt_cost - cstrt_cost_max) * (type_rate_min - type_rate_max)/(cstrt_cost_max - cstrt_cost_min))
+
+    denominator1 = cstrt_cost_max - cstrt_cost_min
+    numerator1 = (cstrt_cost - cstrt_cost_min) * (type_rate_min - type_rate_max)
+    rate_result = type_rate_min - (numerator1/denominator1)
+
     rate_result = round(rate_result, 5)
     cor_result = rate_result * float(params['cor'])
     cor_result = round(cor_result, 5)
     cs_cost = cstrt_cost * (cor_result * 0.01)
     cs_cost = round(cs_cost, 0)
     cs_cost2 = round(cs_cost, -3)
-    cstrt_cost = round(cstrt_cost, 3)
+    cstrt_cost = math.trunc(cstrt_cost)
     d = {
         "cstrt_cost_min": cstrt_cost_min,
         "cstrt_cost_max": cstrt_cost_max,
