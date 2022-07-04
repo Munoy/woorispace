@@ -1,0 +1,6 @@
+.table_02 {width:auto;}
+.title {margin:0 0 5px; font-size:20px;}
+.price_area {color:#000; font-weight:600; padding:10px 25px; display:inline-block; border:1px solid #000; background-color:#f7ff72;}
+@media print {
+body {-webkit-print-color-adjust: exact;}
+}

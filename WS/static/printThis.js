@@ -263,11 +263,11 @@
 
     // defaults
     $.fn.printThis.defaults = {
-        debug: false,           // show the iframe for debugging
+        debug: true,           // show the iframe for debugging
         importCSS: true,        // import parent page css
-        importStyle: false,     // import style tags
+        importStyle: true,     // import style tags
         printContainer: true,   // print outer container/$.selector
-        loadCSS: "",            // load an additional css file - load multiple stylesheets with an array []
+        loadCSS: ["static/style.css", "static/print.css"],            // load an additional css file - load multiple stylesheets with an array []
         pageTitle: "",          // add title to print page
         removeInline: false,    // remove all inline styles
         printDelay: 333,        // variable print delay

@@ -90,30 +90,6 @@
 			<td>
 				<ul class="list=group" id="additional_work_list">
 					<li id="additional_work_01" style="display:none;"> - 설계의도구현 :  <span id="additional_work_01v">0</span>원</li>
-					<li id="additional_work_02" style="display:none;"> - 건축심의 :  <span id="additional_work_02v">0</span>원</li>
-					<li id="additional_work_03" style="display:none;"> - 경관 자문위원회 심의 :  <span id="additional_work_03v">0</span>원</li>
-					<li id="additional_work_04" style="display:none;"> - 문화재 형상변경 심의 :  <span id="additional_work_04v">0</span>원</li>
-					<li id="additional_work_05" style="display:none;"> - 도로 지정 심의 :  <span id="additional_work_05v">0</span>원</li>
-					<li id="additional_work_06" style="display:none;"> - 도로 완화 심의 :  <span id="additional_work_06v">0</span>원</li>
-					<li id="additional_work_07" style="display:none;"> - 에너지절약계획서(협의 도서 작성) :  <span id="additional_work_07v">0</span>원</li>
-					<li id="additional_work_08" style="display:none;"> - 목(특수)구조 추가 구조계산 :  <span id="additional_work_08v">0</span>원</li>
-					<li id="additional_work_09" style="display:none;"> - 오수처리시설설치신고 :  <span id="additional_work_09v">0</span>원</li>
-					<li id="additional_work_10" style="display:none;"> - 배수설비설치신고 :  <span id="additional_work_10v">0</span>원</li>
-					<li id="additional_work_11" style="display:none;"> - 공작물축조신고 :  <span id="additional_work_11v">0</span>원</li>
-					<li id="additional_work_12" style="display:none;"> - 도로점용 :  <span id="additional_work_12v">0</span>원</li>
-					<li id="additional_work_13" style="display:none;"> - 토목/흙막이/지정 설계 :  <span id="additional_work_13v">0</span>원</li>
-					<li id="additional_work_14" style="display:none;"> - 투시도/조감도 :  <span id="additional_work_14v">0</span>원</li>
-					<li id="additional_work_15" style="display:none;"> - 공사비내역서/시방서 :  <span id="additional_work_15v">0</span>원</li>
-					<li id="additional_work_16" style="display:none;"> - 환경성검토 :  <span id="additional_work_16v">0</span>원</li>
-					<li id="additional_work_17" style="display:none;"> - 대지안전확인 :  <span id="additional_work_17v">0</span>원</li>
-					<li id="additional_work_18" style="display:none;"> - 설계안전성검토 :  <span id="additional_work_18v">0</span>원</li>
-					<li id="additional_work_19" style="display:none;"> - CSI인증 :  <span id="additional_work_19v">0</span>원</li>
-					<li id="additional_work_20" style="display:none;"> - 해체계획서작성 :  <span id="additional_work_20v">0</span>원</li>
-					<li id="additional_work_21" style="display:none;"> - 해체계획서검토 :  <span id="additional_work_21v">0</span>원</li>
-					<li id="additional_work_22" style="display:none;"> - 건축물유지관리계획서 :  <span id="additional_work_22v">0</span>원</li>
-					<li id="additional_work_23" style="display:none;"> - 사용승인업무대행(일반건축물) 건축물대장작성 :  <span id="additional_work_23v">0</span>원</li>
-					<li id="additional_work_24" style="display:none;"> - 사용승인업무대행(집합건축물) 건축물대장작성 :  <span id="additional_work_24v">0</span>원</li>
-					<li id="additional_work_25" style="display:none;"> - 준공도면 작성 및 PDF제출 도서 제작 :  <span id="additional_work_25v">0</span>원</li>
 				</ul>
 				<select id='additional_work_select'>
 					<option value=''>추가업무를 선택하세요</option>
@@ -139,9 +115,10 @@
 					<option value='additional_work_20'>해체계획서작성</option>
 					<option value='additional_work_21'>해체계획서검토</option>
 					<option value='additional_work_22'>건축물유지관리계획서</option>
-					<option value='additional_work_23'>사용승인업무대행(일반건축물) 건축물대장작성</option>
-					<option value='additional_work_24'>사용승인업무대행(집합건축물) 건축물대장작성</option>
+					<option value='additional_work_23'>사용승인(일반건축물) 준공도면 및 PDF 제출도서 작성</option>
+					<option value='additional_work_24'>사용승인(집합건축물) 준공도면 및 PDF 제출도서 작성</option>
 					<option value='additional_work_25'>준공도면 작성 및 PDF제출 도서 제작</option>
+					<option value='direct'>직접입력</option>
 				</select>
 				<input type="text" size=35 id="additional_work_cost" placeholder="추가업무비용을 입력하세요(단위:원)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
 				<button type="button" id="additional_work_add">확인</button>
@@ -267,7 +244,7 @@
 		</div>
 
 		<div style="text-align:center;">
-			<div style='color:#000; font-weight:600; padding:10px 25px; display:inline-block; border:1px solid #000; background-color:#f7ff72; '>
+			<div style='color:#000; font-weight:600; padding:10px 25px; display:inline-block; border:1px solid #000; background-color:#f7ff72; ' class="price_area">
 				※ 건축공사설계비 <span id='cs_price_la2'></span> 원 (천단위이하 절사, VAT 별도)
 			</div>
 		</div>
@@ -281,7 +258,7 @@
 		</div>
 
 		<div style='text-align:center;'>
-			<div style='color:#000; font-weight:600; padding:10px 25px; display:inline-block; border:1px solid #000; background-color:#f7ff72; '>
+			<div style='color:#000; font-weight:600; padding:10px 25px; display:inline-block; border:1px solid #000; background-color:#f7ff72; ' class="price_area">
 					※ 기타 용역비 <span id='etc_price2'></span> 원 (천단위이하 절사, VAT 별도)
 			</div>
 		</div>
@@ -294,7 +271,7 @@
 		</div>
 
 		<div style='text-align:center;'>
-			<div style='color:#000; font-weight:600; padding:10px 25px; display:inline-block; border:1px solid #000; background-color:#f7ff72; '>
+			<div style='color:#000; font-weight:600; padding:10px 25px; display:inline-block; border:1px solid #000; background-color:#f7ff72; ' class="price_area">
 					※　합　　계　<span id='total4'></span> 원 (천단위이하 절사, VAT 별도)
 			</div>
 		</div>
@@ -772,9 +749,11 @@
 			}
 			list2.appendChild(list);
 
-			$('#ttitle, #print_table_01, #print_table_02').printThis({
-			loadCSS: ["static/style.css"]
-		});
+			$('#print_table_00, #print_table_01, #print_table_02').printThis({
+				importCSS: true,
+                importStyle: true, //thrown in for extra measure
+				loadCSS: ["static/style.css", "static/print.css"]
+			});
         });
         //프린트 끝
     });
