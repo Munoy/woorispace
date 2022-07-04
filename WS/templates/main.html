@@ -71,8 +71,49 @@
 			</td>
 		</tr>
 		<tr>
+			<th>4. 추가업무</th>
+			<td>
+				<div style="width:100%; text-align: right; color: #999;">(단위 : 원)</div>
+				<ul class="list=group" id="additional_work_list">
+					<li id="additional_work_1">설계의도구현: <span id="설계의도구현">1000</span>원</li>
+				</ul>
+				<input type="text" size=45 name="additional_work" id='additional_work_select' list="work_list">
+					<datalist id="work_list">
+						<option value='설계의도구현'></option>
+						<option value='건축심의'></option>
+						<option value='경관 자문위원회 심의'></option>
+						<option value='문화재 형상변경 심의'></option>
+						<option value='도로 지정 심의'></option>
+						<option value='도로 완화 심의'></option>
+						<option value='에너지절약계획서(협의 도서 작성)'></option>
+						<option value='목(특수)구조 추가 구조계산'></option>
+						<option value='오수처리시설설치신고'></option>
+						<option value='배수설비설치신고'></option>
+						<option value='공작물축조신고'></option>
+						<option value='도로점용'></option>
+						<option value='토목/흙막이/지정 설계'></option>
+						<option value='투시도/조감도'></option>
+						<option value='공사비내역서/시방서'></option>
+						<option value='환경성검토'></option>
+						<option value='대지안전확인'></option>
+						<option value='설계안전성검토'></option>
+						<option value='CSI인증'></option>
+						<option value='해체계획서작성'></option>
+						<option value='해체계획서검토'></option>
+						<option value='건축물유지관리계획서'></option>
+						<option value='사용승인(일반건축물) 준공도면 및 PDF 제출도서 작성'></option>
+						<option value='사용승인(집합건축물) 준공도면 및 PDF 제출도서 작성'></option>
+						<option value='준공도면 작성 및 PDF제출 도서 제작'></option>
+					</datalist>
+				</input>
+				<input type="text" size=30 id="additional_work_cost" placeholder="추가업무비용을 입력하세요"/>
+				<button type="button" id="additional_work_add">확인</button>
+				<button type="button" id="additional_work_del">전체 초기화</button>
+			</td>
+		</tr>
+		<tr>
 			<th>
-				4. 보정요율
+				5. 보정요율
 			</th>
 			<td>
 				<select id="correction">
@@ -83,45 +124,6 @@
 					<option value='direct'>직접입력</option>
 				</select>
 				<input type="text" id="selboxDirect" name="selboxDirect" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" disabled/>
-			</td>
-		</tr>
-		<tr>
-			<th>5. 추가업무</th>
-			<td>
-				<ul class="list=group" id="additional_work_list">
-					<li id="additional_work_01" style="display:none;"> - 설계의도구현 :  <span id="additional_work_01v">0</span>원</li>
-				</ul>
-				<select id='additional_work_select'>
-					<option value=''>추가업무를 선택하세요</option>
-					<option value='additional_work_01'>설계의도구현</option>
-					<option value='additional_work_02'>건축심의</option>
-					<option value='additional_work_03'>경관 자문위원회 심의</option>
-					<option value='additional_work_04'>문화재 형상변경 심의</option>
-					<option value='additional_work_05'>도로 지정 심의</option>
-					<option value='additional_work_06'>도로 완화 심의</option>
-					<option value='additional_work_07'>에너지절약계획서(협의 도서 작성)</option>
-					<option value='additional_work_08'>목(특수)구조 추가 구조계산</option>
-					<option value='additional_work_09'>오수처리시설설치신고</option>
-					<option value='additional_work_10'>배수설비설치신고</option>
-					<option value='additional_work_11'>공작물축조신고</option>
-					<option value='additional_work_12'>도로점용</option>
-					<option value='additional_work_13'>토목/흙막이/지정 설계</option>
-					<option value='additional_work_14'>투시도/조감도</option>
-					<option value='additional_work_15'>공사비내역서/시방서</option>
-					<option value='additional_work_16'>환경성검토</option>
-					<option value='additional_work_17'>대지안전확인</option>
-					<option value='additional_work_18'>설계안전성검토</option>
-					<option value='additional_work_19'>CSI인증</option>
-					<option value='additional_work_20'>해체계획서작성</option>
-					<option value='additional_work_21'>해체계획서검토</option>
-					<option value='additional_work_22'>건축물유지관리계획서</option>
-					<option value='additional_work_23'>사용승인(일반건축물) 준공도면 및 PDF 제출도서 작성</option>
-					<option value='additional_work_24'>사용승인(집합건축물) 준공도면 및 PDF 제출도서 작성</option>
-					<option value='additional_work_25'>준공도면 작성 및 PDF제출 도서 제작</option>
-					<option value='direct'>직접입력</option>
-				</select>
-				<input type="text" size=35 id="additional_work_cost" placeholder="추가업무비용을 입력하세요(단위:원)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
-				<button type="button" id="additional_work_add">확인</button>
 			</td>
 		</tr>
 	</table>
@@ -152,12 +154,12 @@
 			<td style='font-family:Malgun Gothic; font-size:1.0em;'><span id='classification_select_print'></span></td>
 		</tr>
 		<tr>
-			<th style='font-family:Malgun Gothic; font-size:1.0em; font-weight:600;'>4. 보정요율</th>
-			<td style='font-family:Malgun Gothic; font-size:1.0em;'><span id='correction_print'></span></td>
+			<th style='font-family:Malgun Gothic; font-size:1.0em; font-weight:600;'>4. 추가업무</th>
+			<td style='font-family:Malgun Gothic; font-size:1.0em;'><span id='additional_work_select_print'></span></td>
 		</tr>
 		<tr>
-			<th style='font-family:Malgun Gothic; font-size:1.0em; font-weight:600;'>5. 추가업무</th>
-			<td style='font-family:Malgun Gothic; font-size:1.0em;'><span id='additional_work_select_print'></span></td>
+			<th style='font-family:Malgun Gothic; font-size:1.0em; font-weight:600;'>5. 보정요율</th>
+			<td style='font-family:Malgun Gothic; font-size:1.0em;'><span id='correction_print'></span></td>
 		</tr>
 	</table>
 	<!-- 프린트 상단 끝-->
@@ -175,7 +177,7 @@
 					<span id='yongdo_price_tot'></span> <span>원</span>
 				</li>
 				<li>- 적 용 원 가 : <span id='yongdo_price_tot_s'></span> 원</li>
-				<li>- 적 용 원 가 (공공발주사업에 대한 건축사의 업무범위와 대가기준 + 보정요율 적용)</li>
+				<li>- 적 용 원 가 (건축사의 업무범위와 대가기준 + 보정요율 적용)</li>
 				<li>
 					<table class="table_01">
 						<colgroup>
@@ -251,7 +253,7 @@
 
 		<div style='margin-top:20px;'>
 			<ul>
-				<li class="gtd">기타 용역비 산출</li>
+				<li class="gtd">추가업무 비용 산출</li>
 				<div id="additional_work_list2">
 				</div>
 			</ul>
@@ -259,20 +261,20 @@
 
 		<div style='text-align:center;'>
 			<div style='color:#000; font-weight:600; padding:10px 25px; display:inline-block; border:1px solid #000; background-color:#f7ff72; ' class="price_area">
-					※ 기타 용역비 <span id='etc_price2'></span> 원 (천단위이하 절사, VAT 별도)
+					※ 추가업무 비용 <span id='etc_price2'></span> 원 (천단위이하 절사, VAT 별도)
 			</div>
 		</div>
 
 		<div style='margin-top:20px;'>
 			<ul>
 				<li class='gtd'>합 계</li>
-				<li>전체 합계 : <span id='total2'>&nbsp</span> + <span id='total1'>&nbsp</span>  =  <span id='total3'>&nbsp</span> 원</li>
+				<li>설계비 합계 : <span id='total2'>&nbsp</span> + <span id='total1'>&nbsp</span>  =  <span id='total3'>&nbsp</span> 원</li>
 			</ul>
 		</div>
 
 		<div style='text-align:center;'>
 			<div style='color:#000; font-weight:600; padding:10px 25px; display:inline-block; border:1px solid #000; background-color:#f7ff72; ' class="price_area">
-					※　합　　계　<span id='total4'></span> 원 (천단위이하 절사, VAT 별도)
+					※　설계비 합계　<span id='total4'></span> 원 (천단위이하 절사, VAT 별도)
 			</div>
 		</div>
 	</div>
@@ -533,6 +535,8 @@
 		</div>
 	</div>
 </div>
+<li id="tatata">도로 지정 심의: <span id="additional_work_0">10000　</span></li>
+
 <!--suppress CheckValidXmlInScriptTagBody-->
 <script>
     $(document).ready(function(){
@@ -548,25 +552,35 @@
 		document.getElementById("additional_work_add").onclick = function() {
 			var additional_work_select = $("#additional_work_select").val();
 			var additional_work_cost = $("#additional_work_cost").val();
-			var additional_work_list = additional_work_select.concat('v');
-			$('#' + additional_work_list).text(parseInt(additional_work_cost).toLocaleString());
-
-			if (document.getElementById(additional_work_list).textContent != "0" && document.getElementById(additional_work_list).textContent != "") {
-				document.getElementById(additional_work_select).style.display="block";
-
-			} else {
-				document.getElementById(additional_work_select).style.display="none";
-				document.getElementById(additional_work_list).textContent = "0";
-			}
-			const list = document.getElementById("additional_work_list").cloneNode(true);
-			list.id = 'additional_work_list_c';
+			var list_count = document.getElementById("additional_work_list").childElementCount;
+			var list = document.getElementById("additional_work_list");
 			var list2 = document.getElementById("additional_work_list2");
-			while(list2.hasChildNodes()){
-				list2.removeChild(list2.childNodes[0]);
+
+			if (additional_work_cost != "" && additional_work_select != ""){
+				if (document.getElementById(additional_work_select)){
+					if (!isNaN(additional_work_cost)) { additional_work_cost = parseFloat(additional_work_cost); }
+					document.getElementById(additional_work_select).lastChild.innerText = additional_work_cost.toLocaleString();
+				} else {
+					if (!isNaN(additional_work_cost)) { additional_work_cost = parseFloat(additional_work_cost); }
+					var added_work = '<li id="' +additional_work_select+'">' +additional_work_select+ ': <span id="additional_work_' +list_count+ '">'+ additional_work_cost.toLocaleString().toLocaleString() +'　</span></li>';
+					list.innerHTML += added_work;
+				}
 			}
-			list2.appendChild(list);
+			list2.innerHTML = "";
+			const clone_list = list.innerText.replace(/　/g, '<br />');
+
+			list2.innerHTML = clone_list;
 			yongdo();
 		}
+
+		document.getElementById("additional_work_del").onclick = function() {
+			var list = document.getElementById("additional_work_list");
+			var list2 = document.getElementById("additional_work_list2");
+			list.innerHTML = "";
+			list2.innerHTML = "";
+			yongdo();
+		}
+
 
         $("#area").keyup(function(){
             $(this).val( $(this).val().replace(/[^\.0-9]/g, '') );
@@ -607,31 +621,7 @@
             } else {
             	var correction = $("#correction").val();
             }
-			var aw_01 = $("#additional_work_01v").text();
-			var aw_02 = $("#additional_work_02v").text();
-			var aw_03 = $("#additional_work_03v").text();
-			var aw_04 = $("#additional_work_04v").text();
-			var aw_05 = $("#additional_work_05v").text();
-			var aw_06 = $("#additional_work_06v").text();
-			var aw_07 = $("#additional_work_07v").text();
-			var aw_08 = $("#additional_work_08v").text();
-			var aw_09 = $("#additional_work_09v").text();
-			var aw_10 = $("#additional_work_10v").text();
-			var aw_11 = $("#additional_work_11v").text();
-			var aw_12 = $("#additional_work_12v").text();
-			var aw_13 = $("#additional_work_13v").text();
-			var aw_14 = $("#additional_work_14v").text();
-			var aw_15 = $("#additional_work_15v").text();
-			var aw_16 = $("#additional_work_16v").text();
-			var aw_17 = $("#additional_work_17v").text();
-			var aw_18 = $("#additional_work_18v").text();
-			var aw_19 = $("#additional_work_19v").text();
-			var aw_20 = $("#additional_work_20v").text();
-			var aw_21 = $("#additional_work_21v").text();
-			var aw_22 = $("#additional_work_22v").text();
-			var aw_23 = $("#additional_work_23v").text();
-			var aw_24 = $("#additional_work_24v").text();
-			var aw_25 = $("#additional_work_25v").text();
+
 
 
             $('#cs_tot').text(''); // 적용 요율
@@ -694,15 +684,24 @@
                             $('#cs_price_la2').text(data.cs_cost2.toLocaleString()); // 설계비 천원단위 절사
 
                             // 기타 용역비
-                            var etc_prices = [aw_01, aw_02, aw_03, aw_04, aw_05, aw_06, aw_07, aw_08, aw_09, aw_10, aw_11, aw_12, aw_13, aw_14, aw_15, aw_16, aw_17, aw_18, aw_19, aw_20, aw_21, aw_22, aw_23, aw_24, aw_25];
+                            var added = $("#additional_work_list").children().length;
+							var etc_prices = [];
                             var etc_price = 0;
+
+                            for (var i = 0; i < added; i++) {
+                            	console.log(i+"번째");
+		    					console.log($("#additional_work_" + i).text());
+		    					etc_prices.push($("#additional_work_" + i).text());
+							}
+							console.log('각 비용' + etc_prices);
                             etc_price = parseFloat(etc_price);
                             etc_prices.forEach( (item) => {
                             	item = item.replace(/\,/g, '');
-                            	etc_price += parseFloat(item);
+                            	if (!isNaN(item)){
+                            		etc_price += parseFloat(item);
+                            	}
                             });
-                            console.log(etc_prices);
-                            console.log(etc_price);
+                            console.log('합계' + etc_price);
                             var etc_price2 = Math.floor(etc_price / 1000) * 1000; // 천단위 절사
                             $("#etc_price").text(etc_price.toLocaleString());
                             $("#etc_price2").text(etc_price2.toLocaleString());
@@ -741,13 +740,13 @@
             }
             $('#correction_print').text(correction);
 
-            const list = document.getElementById("additional_work_list").cloneNode(true);
-			list.id = 'additional_work_list_c';
+			var list = document.getElementById("additional_work_list");
 			var list2 = document.getElementById("additional_work_select_print");
-			while(list2.hasChildNodes()){
-				list2.removeChild(list2.childNodes[0]);
-			}
-			list2.appendChild(list);
+			list2.innerHTML = "";
+			const clone_list = list.innerText.replace(/　/g, '<br />');
+
+			list2.innerHTML = clone_list;
+
 
 			$('#print_table_00, #print_table_01, #print_table_02').printThis({
 				importCSS: true,
@@ -758,6 +757,5 @@
         //프린트 끝
     });
 </script>
--->
 </body>
 </html>
