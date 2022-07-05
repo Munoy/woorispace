@@ -75,9 +75,8 @@
 			<td>
 				<div style="width:100%; text-align: right; color: #999;">(단위 : 원)</div>
 				<ul class="list=group" id="additional_work_list">
-					<li id="additional_work_1">설계의도구현: <span id="설계의도구현">1000</span>원</li>
 				</ul>
-				<input type="text" size=45 name="additional_work" id='additional_work_select' list="work_list">
+				<input type="text" size=45 name="additional_work" id='additional_work_select' list="work_list" placeholder="추가업무내용을 입력하세요">
 					<datalist id="work_list">
 						<option value='설계의도구현'></option>
 						<option value='건축심의'></option>
@@ -118,6 +117,9 @@
 			<td>
 				<select id="correction">
 					<option value="">보정요율을 선택하세요</option>
+          <option value='0.7'>0.7</option>
+          <option value='0.6'>0.6</option>
+          <option value='0.5'>0.5</option>
 					<option value='0.48'>0.48</option>
 					<option value='0.413'>0.413</option>
 					<option value='0.4'>0.4</option>
@@ -535,7 +537,6 @@
 		</div>
 	</div>
 </div>
-<li id="tatata">도로 지정 심의: <span id="additional_work_0">10000　</span></li>
 
 <!--suppress CheckValidXmlInScriptTagBody-->
 <script>
@@ -571,6 +572,8 @@
 
 			list2.innerHTML = clone_list;
 			yongdo();
+      $("#additional_work_select").val("");
+      $("#additional_work_cost").val("");
 		}
 
 		document.getElementById("additional_work_del").onclick = function() {
