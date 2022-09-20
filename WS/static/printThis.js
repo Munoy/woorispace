@@ -263,7 +263,7 @@
 
     // defaults
     $.fn.printThis.defaults = {
-        debug: true,           // show the iframe for debugging
+        debug: false,           // show the iframe for debugging
         importCSS: true,        // import parent page css
         importStyle: true,     // import style tags
         printContainer: true,   // print outer container/$.selector

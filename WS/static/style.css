@@ -1,3 +1,13 @@
+@import "reset.css";
+
+html {
+/* Prevent font scaling in landscape */
+-webkit-text-size-adjust: none; /*Chrome, Safari, newer versions of Opera*/
+-moz-text-size-adjust: none; /*Firefox*/
+-ms-text-size-adjust: none; /*Ie*/
+-o-text-size-adjust: none; /*old versions of Opera*/
+}
+
 #wrapper {width:96%; max-width:1000px; margin:30px auto; font-family:'Nanum Gothic', sans-serif; font-size:15px; color:#444;}
 ul {list-style-type:none; margin:0; padding:0;}
 ul li {*font-size:14px;}

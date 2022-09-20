@@ -1,764 +1,899 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="imagetoolbar" content="no" />
-<meta http-equiv="X-UA-Compatible" content="IE=Edge">
-<title>건축공사설계비산정내역</title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script src="{{ url_for('static', filename='printThis.js') }}"></script>
-<link  rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-<div id="wrapper">
-	<div id='print_table_00'>
-		<div class="title">건축공사설계비 산정내역</div>
-	</div>
-	{%with messages = get_flashed_messages()%}
-	  	{%if messages %}
-			<script type="text/javascript">
-			  	alert("{{messages[-1]}}");
-			</script>
-		{%endif%}
-	{%endwith%}
-
-	<table class="wrapper_table">
-		<colgroup>
-			<col width="20%">
-			<col width="">
-		</colgroup>
-		<tr>
-			<th>1. 용도선택</th>
-			<td>
-				<select id="yongdo_select">
-					<option value="">용도를 선택하세요</option>
-                    <option value="아파트">아파트</option>
-                    <option value="연립주택">연립주택</option>
-                    <option value="다세대주택">다세대주택</option>
-                    <option value="다가구주택">다가구주택</option>
-                    <option value="근린생활시설">근린생활시설</option>
-                    <option value="창고">창고</option>
-                    <option value="공장">공장</option>
-                    <option value="다중주택">다중주택</option>
-                    <option value="오피스텔">오피스텔</option>
-				</select>
-				<p class="red">※ 2022년 02월 04일 이후 한국감정원 건물신축단가표용도별 평균값으로 계산됩니다.</p>
-			</td>
-		</tr>
-		<tr>
-			<th>2. 면적계산</th>
-			<td>
-				연면적 ( <input type='text' size=7 id='area' maxlength='10' oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> ㎡) + 산정에서 제외된 바닥면적 ( <input type='text' size=7 id='area_other' maxlength='10' oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> ㎡)
-				=  공사면적 ( <input type='text' size=10 id='area_tot'  readonly> ㎡)
-				<p class="red">※산정에서 제외된 바닥면적 : 확장발코니, 필로티, 계단탑 등</p>
-			</td>
-		</tr>
-		<tr>
-			<th>3. 종별선택</th>
-			<td>
-				<select id='classification_select'>
-					<option value=''>종별를 선택하세요</option>
-					<option value='1'>1종(단순)-기본</option>
-					<option value='2'>1종(단순)-중급</option>
-					<option value='3'>1종(단순)-상급</option>
-					<option value='4'>2종(보통)-기본</option>
-					<option value='5'>2종(보통)-중급</option>
-					<option value='6'>2종(보통)-상급</option>
-					<option value='7'>3종(복잡)-기본</option>
-					<option value='8'>3종(복잡)-중급</option>
-					<option value='9'>3종(복잡)-상급</option>
-				</select>
-			</td>
-		</tr>
-		<tr>
-			<th>4. 추가업무</th>
-			<td>
-				<div style="width:100%; text-align: right; color: #999;">(단위 : 원)</div>
-				<ul class="list=group" id="additional_work_list">
-				</ul>
-				<input type="text" size=45 name="additional_work" id='additional_work_select' list="work_list" placeholder="추가업무내용을 입력하세요">
-					<datalist id="work_list">
-						<option value='설계의도구현'></option>
-						<option value='건축심의'></option>
-						<option value='경관 자문위원회 심의'></option>
-						<option value='문화재 형상변경 심의'></option>
-						<option value='도로 지정 심의'></option>
-						<option value='도로 완화 심의'></option>
-						<option value='에너지절약계획서(협의 도서 작성)'></option>
-						<option value='목(특수)구조 추가 구조계산'></option>
-						<option value='오수처리시설설치신고'></option>
-						<option value='배수설비설치신고'></option>
-						<option value='공작물축조신고'></option>
-						<option value='도로점용'></option>
-						<option value='토목/흙막이/지정 설계'></option>
-						<option value='투시도/조감도'></option>
-						<option value='공사비내역서/시방서'></option>
-						<option value='환경성검토'></option>
-						<option value='대지안전확인'></option>
-						<option value='설계안전성검토'></option>
-						<option value='CSI인증'></option>
-						<option value='해체계획서작성'></option>
-						<option value='해체계획서검토'></option>
-						<option value='건축물유지관리계획서'></option>
-						<option value='사용승인(일반건축물) 준공도면 및 PDF 제출도서 작성'></option>
-						<option value='사용승인(집합건축물) 준공도면 및 PDF 제출도서 작성'></option>
-						<option value='준공도면 작성 및 PDF제출 도서 제작'></option>
-					</datalist>
-				</input>
-				<input type="text" size=30 id="additional_work_cost" placeholder="추가업무비용을 입력하세요"/>
-				<button type="button" id="additional_work_add">확인</button>
-				<button type="button" id="additional_work_del">전체 초기화</button>
-			</td>
-		</tr>
-		<tr>
-			<th>
-				5. 보정요율
-			</th>
-			<td>
-				<select id="correction">
-					<option value="">보정요율을 선택하세요</option>
-          <option value='0.7'>0.7</option>
-          <option value='0.6'>0.6</option>
-          <option value='0.5'>0.5</option>
-					<option value='0.48'>0.48</option>
-					<option value='0.413'>0.413</option>
-					<option value='0.4'>0.4</option>
-					<option value='direct'>직접입력</option>
-				</select>
-				<input type="text" id="selboxDirect" name="selboxDirect" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" disabled/>
-			</td>
-		</tr>
-	</table>
-
-
-	<!-- 프린트 상단 시작 -->
-	<table class='wrapper_table' style='display:none;' id='print_table_01'>
-		<colgroup>
-			<col width="20%">
-			<col width="">
-		</colgroup>
-	    <tr>
-			<th style='font-size:1.0em; font-family:Malgun Gothic; font-weight:600;'>1. 용도선택</th>
-			<td style='font-family:Malgun Gothic; font-size:1.0em;'><span id='yongdo_select_print'></span></td>
-		</tr>
-		<tr>
-			<th style='font-family:Malgun Gothic; font-size:1.0em; font-weight:600;'>2. 면적계산</th>
-			<td style='font-family:Malgun Gothic; font-size:1.0em;'>
-				연면적 (&nbsp;<span id='area_print'></span> ㎡) +
-				산정에서 제외된 바닥면적 (&nbsp;<span id='area_other_print'></span> ㎡)
-				<span style='margin-top:6px; letter-spacing:6px; font-weight:600;'><br>
-				= 공사면적 (<span id='area_tot_print'></span> ㎡)</span>
-				<p style='font-family:Malgun Gothic; font-size:.875em; color:#fa4848;'>※산정에서 제외된 바닥면적 : 확장발코니, 필로티, 계단탑 등</p>
-			</td>
-		</tr>
-		<tr>
-			<th style='font-family:Malgun Gothic; font-size:1.0em; font-weight:600;'>3. 종별선택</th>
-			<td style='font-family:Malgun Gothic; font-size:1.0em;'><span id='classification_select_print'></span></td>
-		</tr>
-		<tr>
-			<th style='font-family:Malgun Gothic; font-size:1.0em; font-weight:600;'>4. 추가업무</th>
-			<td style='font-family:Malgun Gothic; font-size:1.0em;'><span id='additional_work_select_print'></span></td>
-		</tr>
-		<tr>
-			<th style='font-family:Malgun Gothic; font-size:1.0em; font-weight:600;'>5. 보정요율</th>
-			<td style='font-family:Malgun Gothic; font-size:1.0em;'><span id='correction_print'></span></td>
-		</tr>
-	</table>
-	<!-- 프린트 상단 끝-->
-
-	<div class='wrapper_box' id='print_table_02'>
-		<div>
-			<ul>
-				<li class='gtd'>설계비 적용요율</li>
-				<li>
-					- 적용공사비 :
-					<span id='expense_construction_price'></span> <span>원/㎡</span>
-					<span style='padding:0 5px;'>*</span>
-					<span id='area_tot_s'></span> <span>㎡</span>
-					<span>=</span>
-					<span id='yongdo_price_tot'></span> <span>원</span>
-				</li>
-				<li>- 적 용 원 가 : <span id='yongdo_price_tot_s'></span> 원</li>
-				<li>- 적 용 원 가 (건축사의 업무범위와 대가기준 + 보정요율 적용)</li>
-				<li>
-					<table class="table_01">
-						<colgroup>
-							<col width="30%">
-							<col width="">
-							<col width="25%">
-						</colgroup>
-						<tr>
-							<th>공 사 비</th>
-							<th>설 계 비   요 율</th>
-							<th>비  고</th>
-						</tr>
-						<tr>
-							<td><span id='expense_construction_min'>&nbsp;</span></td>
-							<td><span id='supervising_expenses_min'>&nbsp;</span></td>
-							<td><span>&nbsp;</span></td>
-						</tr>
-						<tr>
-							<td><span id='expense_construction_max'>&nbsp;</span></td>
-							<td><span id='supervising_expenses_max'>&nbsp;</span></td>
-							<td><span>&nbsp;</span></td>
-						</tr>
-					</table>
-				</li>
-				<li>- 건축공사 설계비요율 (직선보간법에 의함)</li>
-				<li>
-					<table class="table_02">
-						<tr>
-							<td rowspan='3' width='15%'>
-								<span id='supervising_expenses_min2'>&nbsp;</span>
-								<span style='padding:0 15px;'>-</span>
-							</td>
-
-							<td style='border-bottom: 1px solid #000; text-align:center;'>
-								( <span id='yongdo_price_tot_ss'>&nbsp;</span> -
-								<span id='expense_construction_min2'>&nbsp;</span>
-								) * ( <span id='supervising_expenses_min3'>&nbsp;</span> -
-								<span id='supervising_expenses_max2'>&nbsp;</span> )
-							</td>
-							<td rowspan='3' width='20%'>
-								<span style='padding:0 15px;'>=</span>
-								<span id='cs_tot'>&nbsp;</span>
-							</td>
-						</tr>
-						<tr>
-							<td style='text-align:center;'>
-								( <span id='expense_construction_max2'>&nbsp;</span> - <span id='expense_construction_min3'>&nbsp;</span> )
-							</td>
-						</tr>
-					</table>
-				</li>
-				<li>- 설계비 보정요율</li>
-				<li>
-					<div style="text-align:center;">
-						<span id='cs_tot2'> </span>   *   <span id="cor"> </span>   =   <span id="cs_cor"> </span>
-					</div>
-				</li>
-			</ul>
-		</div>
-
-		<div style='margin-top:20px;'>
-			<ul>
-				<li class='gtd'>설계비 산출</li>
-				<li>건축공사 설계비 : <span id='yongdo_price_tot_sss'>&nbsp</span> * <span id='cs_cor2'>&nbsp</span>&#37;  =  <span class='cs_price_la'>&nbsp</span> 원  &nbsp; (<span style="color:red;">건축공사 설계비 최소 단가입니다.</span>)</li>
-			</ul>
-		</div>
-
-		<div style="text-align:center;">
-			<div style='color:#000; font-weight:600; padding:10px 25px; display:inline-block; border:1px solid #000; background-color:#f7ff72; ' class="price_area">
-				※ 건축공사설계비 <span id='cs_price_la2'></span> 원 (천단위이하 절사, VAT 별도)
-			</div>
-		</div>
-
-		<div style='margin-top:20px;'>
-			<ul>
-				<li class="gtd">추가업무 비용 산출</li>
-				<div id="additional_work_list2">
-				</div>
-			</ul>
-		</div>
-
-		<div style='text-align:center;'>
-			<div style='color:#000; font-weight:600; padding:10px 25px; display:inline-block; border:1px solid #000; background-color:#f7ff72; ' class="price_area">
-					※ 추가업무 비용 <span id='etc_price2'></span> 원 (천단위이하 절사, VAT 별도)
-			</div>
-		</div>
-
-		<div style='margin-top:20px;'>
-			<ul>
-				<li class='gtd'>합 계</li>
-				<li>설계비 합계 : <span id='total2'>&nbsp</span> + <span id='total1'>&nbsp</span>  =  <span id='total3'>&nbsp</span> 원</li>
-			</ul>
-		</div>
-
-		<div style='text-align:center;'>
-			<div style='color:#000; font-weight:600; padding:10px 25px; display:inline-block; border:1px solid #000; background-color:#f7ff72; ' class="price_area">
-					※　설계비 합계　<span id='total4'></span> 원 (천단위이하 절사, VAT 별도)
-			</div>
-		</div>
-	</div>
-	<!-- 프린트 하단 끝 -->
-	<div style='width:200px; margin:30px auto;'>
-		<div id="pagePrint">설계비 산정 내역 인쇄</div>
-	</div>
-
-	<div class="explain" style='margin-top:80px; padding-top:50px; border-top:1px dashed #000;'>
-
-		<div class="title">
-			설계비 산정방법 설명
-		</div>
-
-		<div class="box">
-			<ul>
-				<li class="t1">설계비 = 총공사비1) × 요율2)</li>
-				<li>
-					<p>1) 총공사비 = 용도별 건축비*[별표 참조] × 공사면적**(실제시공면적)</p>
-					<span>* 용도별건축비는 2022년도 한국감정원의 건물신축단가를 기준으로 평균한 것임.</span>
-					<span>** 공사면적은 연면적에 필로티, 발코니, 옥탑, 다락 등을 합계한 실제 시공면적을 말함.</span>
-				</li>
-				<li>
-					<p>2) 요율</p>
-					<span>∘ 공공발주사업에 대한 건축사의 업무범위와 대가기준 '[별표4]건축설계 대가요율'</span>
-					<span>∘ 공사비가 [별표4]에서 규정한 공사비의 중간에 있는 경우에는 직선보간법에 따라서 산정</span>
-					<img src="{{ url_for('static', filename='img1.gif') }}">
-				</li>
-			</ul>
-		</div>
-
-		<div class="box">
-			<ul>
-				<li class="t1">한국감정원 2022년도 건물신축단가표용도별 평균값</li>
-				<li>
-					<p>「건축법」제25조제12항 및 표준조례(안) 운영지침*과 관련하여 감리비용 산출시 참고 가능한 공사비를 다음과 같이 알려드립니다.</p>
-					<p>* 표준조례(안) 운영지침 : 비상주감리의 공사비 산정 시 공사내역서 또는 한국감정원 건물신축단가표 용도별 평균값을 적용할 수 있다.</p>
-				</li>
-				<li>
-					<table>
-						<colgroup>
-							<col width="35%">
-							<col width="">
-						</colgroup>
-						<tr>
-							<th>용도</th>
-							<th>공사비 (원/㎡)</th>
-						</tr>
-												<tr>
-							<td>아파트</td>
-							<td>1,564,630</td>
-						</tr>
-												<tr>
-							<td>연립주택</td>
-							<td>1,902,800</td>
-						</tr>
-												<tr>
-							<td>다세대주택</td>
-							<td>1,639,088</td>
-						</tr>
-												<tr>
-							<td>다가구주택</td>
-							<td>1,651,588</td>
-						</tr>
-												<tr>
-							<td>근린생활시설</td>
-							<td>1,567,446</td>
-						</tr>
-												<tr>
-							<td>창고</td>
-							<td>699,500</td>
-						</tr>
-												<tr>
-							<td>공장</td>
-							<td>867,125</td>
-						</tr>
-												<tr>
-							<td>다중주택</td>
-							<td>1,680,755</td>
-						</tr>
-												<tr>
-							<td>오피스텔</td>
-							<td>1,641,879</td>
-						</tr>
-											</table>
-					<span style='margin:8px 0 0 0'>※ 그 밖의 건축물은 유사한 용도를 참조하여 적용(㎡기준임)</span>
-				</li>
-			</ul>
-		</div>
-
-		<div class="box">
-			<ul>
-				<li class="t1">공공발주사업에 대한 건축사의 업무범위와 대가기준 '[별표4]건축설계 대가요율' <span style='font-weight:normal; float:right; margin:7px 0 0;'>(단위 : %)</span></li>
-				<li>
-					<table>
-						<colgroup>
-							<col width="">
-							<col width="">
-							<col width="8%">
-							<col width="8%">
-							<col width="8%">
-							<col width="8%">
-							<col width="8%">
-							<col width="8%">
-							<col width="8%">
-							<col width="8%">
-							<col width="8%">
-						</colgroup>
-						<tr>
-							<th rowspan="2">공 사 비</th>
-							<th >종 별</th>
-							<th colspan="3">제3종(복잡)</th>
-							<th colspan="3">제2종(보통)</th>
-							<th colspan="3">제1종(단순)</th>
-						</tr>
-						<tr>
-							<!-- td 1 -->
-							<td>도서의양</td>
-							<td>상급</td>
-							<td>중급</td>
-							<td>기본</td>
-							<td>상급</td>
-							<td>중급</td>
-							<td>기본</td>
-							<td>상급</td>
-							<td>중급</td>
-							<td>기본</td>
-						</tr>
-						<tr>
-							<td colspan="2">5000만원 이하</td><td>12.55</td>	<td>10.46</td>	<td>8.36</td>	<td>11.41</td>	<td>9.51</td>	<td>7.61</td>	<td>10.22</td>	<td>8.51</td>	<td>6.81</td>
-						</tr>
-						<tr>
-							<td colspan="2">1억원</td>		<td>11.48</td>	<td>9.56</td>	<td>7.65</td>	<td>10.43</td>	<td>8.69</td>	<td>6.95</td>	<td>9.38</td>	<td>7.82</td>	<td>6.25</td>
-						</tr>
-						<tr>
-							<td colspan="2">2억원</td>	 	<td>9.99</td>	<td>8.33</td>	<td>6.66</td>	<td>9.08</td>	<td>7.57</td>	<td>6.05</td>	<td>8.16</td>	<td>6.8</td>	<td>5.44</td>
-						</tr>
-						<tr>
-							<td colspan="2">3억원</td>		<td>8.68</td>	<td>7.23</td>	<td>5.78</td>	<td>7.88</td>	<td>6.57</td>	<td>5.26</td>	<td>7.08</td>	<td>5.9</td>	<td>4.72</td>
-						</tr>
-						<tr>
-							<td colspan="2">5억원</td>		<td>7.9</td>	<td>6.58</td>	<td>5.26</td>	<td>7.18</td>	<td>5.98</td>	<td>4.79</td>	<td>6.46</td>	<td>5.38</td>	<td>4.3</td>
-						</tr>
-						<tr>
-							<td colspan="2">10억원</td>		<td>7.03</td>	<td>5.86</td>	<td>4.68</td>	<td>6.39</td>	<td>5.32</td>	<td>4.26</td>	<td>5.75</td>	<td>4.79</td>	<td>3.83</td>
-						</tr>
-						<tr>
-							<td colspan="2">20억원</td> 		<td>6.22</td>	<td>5.19</td>	<td>4.15</td>	<td>5.66</td>	<td>4.72</td>	<td>3.77</td>	<td>5.09</td>	<td>4.24</td>	<td>3.4</td>
-						</tr>
-						<tr>
-							<td colspan="2">30억원</td> 		<td>5.91</td>	<td>4.93</td>	<td>3.94</td>	<td>5.38</td>	<td>4.48</td>	<td>3.58</td>	<td>4.84</td>	<td>4.03</td>	<td>3.23</td>
-						</tr>
-						<tr>
-							<td colspan="2">50억원</td> 		<td>5.72</td>	<td>4.76</td>	<td>3.81</td>	<td>5.2</td>	<td>4.33</td>	<td>3.46</td>	<td>4.68</td>	<td>3.9</td>	<td>3.12</td>
-						</tr>
-						<tr>
-							<td colspan="2">100억원</td> 	<td>5.58</td>	<td>4.65</td>	<td>3.72</td>	<td>5.07</td>	<td>4.22</td>	<td>3.38</td>	<td>4.56</td>	<td>3.8</td>	<td>3.04</td>
-						</tr>
-						<tr>
-							<td colspan="2">200억원</td>		<td>5.42</td>	<td>4.51</td>	<td>3.61</td>	<td>4.92</td>	<td>4.1</td>	<td>3.28</td>	<td>4.43</td>	<td>3.69</td>	<td>2.96</td>
-						</tr>
-						<tr>
-							<td colspan="2">300억원</td> 	<td>5.32</td>	<td>4.44</td>	<td>3.55</td>	<td>4.84</td>	<td>4.03</td>	<td>3.23</td>	<td>4.36</td>	<td>3.63</td>	<td>2.91</td>
-						</tr>
-						<tr>
-							<td colspan="2">500억원</td> 	<td>5.25</td>	<td>4.38</td>	<td>3.5</td>	<td>4.77</td>	<td>3.98</td>	<td>3.18</td>	<td>4.3</td>	<td>3.58</td>	<td>2.87</td>
-						</tr>
-						<tr>
-							<td colspan="2">1000억원</td> 	<td>5.14</td>	<td>4.29</td>	<td>3.43</td>	<td>4.68</td>	<td>3.9</td>	<td>3.12</td>	<td>4.21</td>	<td>3.5</td>	<td>2.8</td>
-						</tr>
-						<tr>
-							<td colspan="2">2000억원</td> 	<td>5.06</td>	<td>4.22</td>	<td>3.38</td>	<td>4.6</td>	<td>3.84</td>	<td>3.07</td>	<td>4.14</td>	<td>3.45</td>	<td>2.76</td>
-						</tr>
-						<tr>
-							<td colspan="2">3000억원</td>	<td>5.01</td>	<td>4.17</td>	<td>3.34</td>	<td>4.55</td>	<td>3.79</td>	<td>3.03</td>	<td>4.1</td>	<td>3.42</td>	<td>2.73</td>
-						</tr>
-						<tr>
-							<td colspan="2">5000억원</td>	<td>4.93</td>	<td>4.11</td>	<td>3.28</td>	<td>4.48</td>	<td>3.73</td>	<td>2.99</td>	<td>4.03</td>	<td>3.36</td>	<td>2.69</td>
-						</tr>
-					</table>
-					<span style='margin:8px 0 0 0'>주) "공사비"라 함은 건축주의 공사비 총예정금액(자재대 포함)중 용지비, 보상비, 법률수속비 및 부가가치세를 제외한 일체의 금액을 말한다.</span>
-				</li>
-			</ul>
-		</div>
-
-		<div class="box">
-			<ul>
-				<li class="t1">[별표 3] 건축물의 종별 구분</li>
-				<li>
-					<table>
-						<colgroup>
-							<col width="25%">
-							<col width="">
-						</colgroup>
-						<tr>
-							<th>종 별</th>
-							<th>건축물의 종류</th>
-						</tr>
-						<tr>
-							<td>1 종<br />(단순)</td>
-							<td style='text-align:left; padding-left:25px;'>
-								- 가설건축물
-								- 창고시설(하역장)<br />
-								- 자동차관련시설(정비공장, 운전학원·정비학원 제외)<br />
-								- 동물 및 식물관련시설(가축용 창고, 관리사, 가축시장, 버섯재배사) <br />
-								- 기타 제1종 용도와 유사한 것<br />
-								※ 제1종 시설로서 공기조화 설비 등 특수설비를 요하는 시설은 제2종을 적용<br />
-							</td>
-						</tr>
-						<tr>
-							<td>2 종<br />(보통)</td>
-							<td style='text-align:left; padding-left:25px;'>
-								- 공작물(굴뚝·옹벽·고가수조 등)<br />
-								- 단독주택<br />
-								- 공동주택<br />
-								- 제1종 근린생활시설<br />
-								- 제2종 근린생활시설<br />
-								- 판매시설<br />
-								- 장례식장<br />
-								- 교육연구시설(도서관 제외)<br />
-								- 노유자시설<br />
-								- 수련시설<br />
-								- 업무시설<br />
-								- 숙박시설(관광숙박시설 제외)<br />
-								- 위락시설<br />
-								- 공장<br />
-								- 창고시설(냉장·냉동창고 포함)<br />
-								- 위험물저장 및 처리시설<br />
-								- 자동차 관련시설(정비공장, 운전학원,정비학원)<br />
-								- 동물 및 식물관련시설<br />
-								- 분뇨 및 쓰레기처리시설<br />
-								- 교정 및 군사시설<br />
-								- 묘지관련시설(화장장 제외)<br />
-								- 관광휴게시설(관망탑 제외)<br />
-								- 기타 제2종 용도와 유사한 것<br />
-								※ 제2종 시설로서 특수구조 또는 공기조화 설비 등 특수설비를 요하는  시설은 제3종을 적용<br />
-							</td>
-						</tr>
-						<tr>
-							<td>3 종<br />(보통)</td>
-							<td style='text-align:left; padding-left:25px;'>
-								- 문화 및 집회시설<br />
-								- 운수시설(철도시설, 공항시설, 항만시설, 종합여객 시설 등) <br />
-								- 의료시설<br />
-								- 교육연구시설 중 도서관<br />
-								- 운동시설<br />
-								- 숙박시설 중 관광숙박시설<br />
-								- 발전시설(발전소, 집단에너지 공급시설 포함)<br />
-								- 방송통신시설(방송·통신시설, 촬영시설)<br />
-								- 묘지관련시설 중 화장장<br />
-								- 관광휴게시설 중 관망탑<br />
-								- 기타 제3종 용도와 유사한 것<br />
-							</td>
-						</tr>
-					</table>
-				</li>
-			</ul>
-		</div>
-	</div>
-</div>
-
-<!--suppress CheckValidXmlInScriptTagBody-->
-<script>
-    $(document).ready(function(){
-		$("#correction").change(function() {
-			if($("#correction").val() == "direct") {
-				$("#selboxDirect").attr("disabled", false);
-			}  else {
-				$("#selboxDirect").val("");
-				$("#selboxDirect").attr("disabled", true);
-			}
-		});
-
-		document.getElementById("additional_work_add").onclick = function() {
-			var additional_work_select = $("#additional_work_select").val();
-			var additional_work_cost = $("#additional_work_cost").val();
-			var list_count = document.getElementById("additional_work_list").childElementCount;
-			var list = document.getElementById("additional_work_list");
-			var list2 = document.getElementById("additional_work_list2");
-
-			if (additional_work_cost != "" && additional_work_select != ""){
-				if (document.getElementById(additional_work_select)){
-					if (!isNaN(additional_work_cost)) { additional_work_cost = parseFloat(additional_work_cost); }
-					document.getElementById(additional_work_select).lastChild.innerText = additional_work_cost.toLocaleString();
-				} else {
-					if (!isNaN(additional_work_cost)) { additional_work_cost = parseFloat(additional_work_cost); }
-					var added_work = '<li id="' +additional_work_select+'">' +additional_work_select+ ': <span id="additional_work_' +list_count+ '">'+ additional_work_cost.toLocaleString().toLocaleString() +'　</span></li>';
-					list.innerHTML += added_work;
-				}
-			}
-			list2.innerHTML = "";
-			const clone_list = list.innerText.replace(/　/g, '<br />');
-
-			list2.innerHTML = clone_list;
-			yongdo();
-      $("#additional_work_select").val("");
-      $("#additional_work_cost").val("");
-		}
-
-		document.getElementById("additional_work_del").onclick = function() {
-			var list = document.getElementById("additional_work_list");
-			var list2 = document.getElementById("additional_work_list2");
-			list.innerHTML = "";
-			list2.innerHTML = "";
-			yongdo();
-		}
-
-
-        $("#area").keyup(function(){
-            $(this).val( $(this).val().replace(/[^\.0-9]/g, '') );
-            if(!$("#area_other").val() && $("#area_other").val() != "0")
-                $("#area_other").val("0");
-            yongdo();
-        });
-
-        $("#area_other").keyup(function(){
-            $(this).val( $(this).val().replace(/[^\.0-9]/g, '') );
-            yongdo();
-        });
-
-        $('#yongdo_select').change(function(){
-            yongdo();
-        });
-
-        $('#classification_select').change(function(){
-            yongdo();
-        });
-
-        $('#correction').change(function(){
-            yongdo();
-        });
-
-        $('#selboxDirect').keyup(function(){
-            yongdo();
-        });
-
-
-        function yongdo(){
-            var area = $('#area').val();
-            var area_other = $('#area_other').val();
-            var use = $("#yongdo_select").val();
-            var type = $("#classification_select").val();
-            if(document.getElementById("correction").value == 'direct') {
-            	var correction = $("#selboxDirect").val();
-            } else {
-            	var correction = $("#correction").val();
-            }
-
-
-
-            $('#cs_tot').text(''); // 적용 요율
-            $('#cs_tot2').text('');
-            $('.cs_price_la').text(''); // 감리비
-            $('#cs_price_la2').text(''); // 감리비 천원단위 절사
-            $("#etc_price").text('');
-            $("#etc_price2").text('');
-
-            if(area && area_other)
-            {
-                var totarea = parseFloat(area) + parseFloat(area_other);
-                $("#area_tot").val(totarea);
-                if(use && type && correction)
-                {
-                    $.ajax({
-                        url:"{{ url_for('main.cal') }}",
-                        type:'POST',
-                        dataType:'json',
-                        data: {
-                            use : use,
-                            area : totarea,
-                            type : type,
-                            cor : correction,
-                            mode : 2022
-                        },
-                        success:function(data){
-                            $('#area_tot').val(totarea.toLocaleString());
-                            $('#expense_construction_price').text(data.use_cost.toLocaleString()); // 단가
-                            $('#area_tot_s').text(totarea.toLocaleString()); // 총면적
-
-                            $('#yongdo_price_tot').text(data.cstrt_cost.toLocaleString()); // 적용공사비
-                            $('#yongdo_price_tot_s').text(data.cstrt_cost.toLocaleString()); // 적용원가
-                            $('#yongdo_price_tot_ss').text(data.cstrt_cost.toLocaleString());
-                            $('#yongdo_price_tot_sss').text(data.cstrt_cost.toLocaleString());
-
-                            $('#expense_construction_min').text(data.cstrt_cost_min.toLocaleString()); // 작은금액
-                            $('#expense_construction_min2').text(data.cstrt_cost_min.toLocaleString());
-                            $('#expense_construction_min3').text(data.cstrt_cost_min.toLocaleString());
-
-                            $('#expense_construction_max').text(data.cstrt_cost_max.toLocaleString()); // 큰금액
-                            $('#expense_construction_max2').text(data.cstrt_cost_max.toLocaleString());
-
-                            $('#supervising_expenses_min').text(data.type_rate_min); // 작은금액 요율
-                            $('#supervising_expenses_min2').text(data.type_rate_min);
-                            $('#supervising_expenses_min3').text(data.type_rate_min);
-
-                            $('#supervising_expenses_max').text(data.type_rate_max); // 큰금액 요율
-                            $('#supervising_expenses_max2').text(data.type_rate_max);
-
-                            $('#cs_tot').text(data.rate_result); // 보정 미적용 요율
-                            $('#cs_tot2').text(data.rate_result);
-
-                            $('#cs_cor').text(data.cor_result); // 보정 적용 요율
-							$('#cs_cor2').text(data.cor_result);
-
-							$('#cor').text(correction);
-
-                            $('.cs_price_la').text(data.cs_cost.toLocaleString()); // 설계비
-                            $('#cs_price_la2').text(data.cs_cost2.toLocaleString()); // 설계비 천원단위 절사
-
-                            // 기타 용역비
-                            var added = $("#additional_work_list").children().length;
-							var etc_prices = [];
-                            var etc_price = 0;
-
-                            for (var i = 0; i < added; i++) {
-                            	console.log(i+"번째");
-		    					console.log($("#additional_work_" + i).text());
-		    					etc_prices.push($("#additional_work_" + i).text());
-							}
-							console.log('각 비용' + etc_prices);
-                            etc_price = parseFloat(etc_price);
-                            etc_prices.forEach( (item) => {
-                            	item = item.replace(/\,/g, '');
-                            	if (!isNaN(item)){
-                            		etc_price += parseFloat(item);
-                            	}
-                            });
-                            console.log('합계' + etc_price);
-                            var etc_price2 = Math.floor(etc_price / 1000) * 1000; // 천단위 절사
-                            $("#etc_price").text(etc_price.toLocaleString());
-                            $("#etc_price2").text(etc_price2.toLocaleString());
-
-                            //합계
-                            $("#total1").text(etc_price2.toLocaleString());
-                            $("#total2").text(data.cs_cost2.toLocaleString());
-                            var total = etc_price2 + data.cs_cost2;
-                            $("#total3").text(total.toLocaleString());
-                            $("#total4").text(total.toLocaleString());
-                        },
-                        error:function(xhr,status,error){
-                            alert(xhr.status);
-                        }
-                    });
-                }
-            }
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="imagetoolbar" content="no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <title>건축공사설계비산정내역</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="{{ url_for('static', filename='printThis.js') }}"></script>
+    <link  rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body>
+    <div id="wrapper">
+      <div id='print_table_00'>
+        <div class="title">건축공사설계비 산정내역</div>
+      </div>
+      {%with messages = get_flashed_messages()%}
+      {%if messages %}
+      <script type="text/javascript">
+        alert("{{messages[-1]}}");
+      </script>
+      {%endif%}
+      {%endwith%}
+      <table class="wrapper_table">
+        <colgroup>
+          <col width="20%">
+          <col width="">
+        </colgroup>
+        <tr>
+          <th>1. 용도선택</th>
+          <td>
+            <select id="yongdo_select">
+              <option value="">용도를 선택하세요</option>
+              <option value="아파트">아파트</option>
+              <option value="연립주택">연립주택</option>
+              <option value="다세대주택">다세대주택</option>
+              <option value="다가구주택">다가구주택</option>
+              <option value="근린생활시설">근린생활시설</option>
+              <option value="창고">창고</option>
+              <option value="공장">공장</option>
+              <option value="다중주택">다중주택</option>
+              <option value="오피스텔">오피스텔</option>
+            </select>
+            <p class="red">※ 2022년 02월 04일 이후 한국부동산원 건물신축단가표용도별 평균값으로 계산됩니다.</p>
+          </td>
+        </tr>
+        <tr>
+          <th>2. 면적계산</th>
+          <td>
+            연면적 ( <input type='text' size=7 id='area' maxlength='10' oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> ㎡) + 산정에서 제외된 바닥면적 ( <input type='text' size=7 id='area_other' maxlength='10' oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> ㎡)
+            =  공사면적 ( <input type='text' size=10 id='area_tot'  readonly> ㎡)
+            <p class="red">※산정에서 제외된 바닥면적 : 확장발코니, 필로티, 계단탑 등</p>
+          </td>
+        </tr>
+        <tr>
+          <th>3. 종별선택</th>
+          <td>
+            <select id='classification_select'>
+              <option value=''>종별를 선택하세요</option>
+              <option value='1'>1종(단순)-기본</option>
+              <option value='2'>1종(단순)-중급</option>
+              <option value='3'>1종(단순)-상급</option>
+              <option value='4'>2종(보통)-기본</option>
+              <option value='5'>2종(보통)-중급</option>
+              <option value='6'>2종(보통)-상급</option>
+              <option value='7'>3종(복잡)-기본</option>
+              <option value='8'>3종(복잡)-중급</option>
+              <option value='9'>3종(복잡)-상급</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <th>4. 추가업무</th>
+          <td>
+            <ul class="list=group" id="additional_work_list">
+            </ul>
+            <input type="text" size=45 name="additional_work" id='additional_work_select' list="work_list" placeholder="추가업무내용을 입력하세요">
+            <datalist id="work_list">
+              <option value='설계의도구현'></option>
+              <option value='건축심의'></option>
+              <option value='경관 자문위원회 심의'></option>
+              <option value='문화재 형상변경 심의'></option>
+              <option value='도로 지정 심의'></option>
+              <option value='도로 완화 심의'></option>
+              <option value='에너지절약계획서(협의 도서 작성)'></option>
+              <option value='목(특수)구조 추가 구조계산'></option>
+              <option value='오수처리시설설치신고'></option>
+              <option value='배수설비설치신고'></option>
+              <option value='공작물축조신고'></option>
+              <option value='도로점용'></option>
+              <option value='토목/흙막이/지정 설계'></option>
+              <option value='투시도/조감도'></option>
+              <option value='공사비내역서/시방서'></option>
+              <option value='환경성검토'></option>
+              <option value='대지안전확인'></option>
+              <option value='설계안전성검토'></option>
+              <option value='CSI인증'></option>
+              <option value='해체계획서작성'></option>
+              <option value='해체계획서검토'></option>
+              <option value='건축물유지관리계획서'></option>
+              <option value='사용승인(일반건축물) 준공도면 및 PDF 제출도서 작성'></option>
+              <option value='사용승인(집합건축물) 준공도면 및 PDF 제출도서 작성'></option>
+              <option value='준공도면 작성 및 PDF제출 도서 제작'></option>
+            </datalist>
+            </input>
+            <input type="text" size=30 id="additional_work_cost" placeholder="추가업무비용을 입력하세요 (단위 : 만원)"/>
+            <button type="button" id="additional_work_add">확인</button>
+            <button type="button" id="additional_work_del">전체 초기화</button>
+          </td>
+        </tr>
+        <tr>
+          <th>
+            5. 보정요율
+          </th>
+          <td>
+            <select id="correction">
+              <option value="">보정요율을 선택하세요</option>
+              <option value='0.7'>0.7</option>
+              <option value='0.6'>0.6</option>
+              <option value='0.5'>0.5</option>
+              <option value='0.4'>0.4</option>
+              <option value='direct'>직접입력</option>
+            </select>
+            <input type="text" id="selboxDirect" name="selboxDirect" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" disabled/>
+          </td>
+        </tr>
+      </table>
+      <!-- 프린트 상단 시작 -->
+      <table class='wrapper_table' style='display:none;' id='print_table_01'>
+        <colgroup>
+          <col width="20%">
+          <col width="">
+        </colgroup>
+        <tr>
+          <th style='font-size:1.0em; font-family:Malgun Gothic; font-weight:600;'>1. 용도선택</th>
+          <td style='font-family:Malgun Gothic; font-size:1.0em;'><span id='yongdo_select_print'></span></td>
+        </tr>
+        <tr>
+          <th style='font-family:Malgun Gothic; font-size:1.0em; font-weight:600;'>2. 면적계산</th>
+          <td style='font-family:Malgun Gothic; font-size:1.0em;'>
+            연면적 (&nbsp;<span id='area_print'></span> ㎡) +
+            산정에서 제외된 바닥면적 (&nbsp;<span id='area_other_print'></span> ㎡)
+            <span style='margin-top:6px; letter-spacing:6px; font-weight:600;'><br>
+            = 공사면적 (<span id='area_tot_print'></span> ㎡)</span>
+            <p style='font-family:Malgun Gothic; font-size:.875em; color:#fa4848;'>※산정에서 제외된 바닥면적 : 확장발코니, 필로티, 계단탑 등</p>
+          </td>
+        </tr>
+        <tr>
+          <th style='font-family:Malgun Gothic; font-size:1.0em; font-weight:600;'>3. 종별선택</th>
+          <td style='font-family:Malgun Gothic; font-size:1.0em;'><span id='classification_select_print'></span></td>
+        </tr>
+        <tr>
+          <th style='font-family:Malgun Gothic; font-size:1.0em; font-weight:600;'>4. 추가업무</th>
+          <td style='font-family:Malgun Gothic; font-size:1.0em;'><span id='additional_work_select_print'></span></td>
+        </tr>
+        <tr>
+          <th style='font-family:Malgun Gothic; font-size:1.0em; font-weight:600;'>5. 보정요율</th>
+          <td style='font-family:Malgun Gothic; font-size:1.0em;'><span id='correction_print'></span></td>
+        </tr>
+      </table>
+      <!-- 프린트 상단 끝-->
+      <div class='wrapper_box' id='print_table_02'>
+        <div>
+          <ul>
+            <li class='gtd'>설계비 적용요율</li>
+            <li>
+              - 적용공사비 :
+              <span id='expense_construction_price'></span> <span>원/㎡</span>
+              <span style='padding:0 5px;'>*</span>
+              <span id='area_tot_s'></span> <span>㎡</span>
+              <span>=</span>
+              <span id='yongdo_price_tot'></span> <span>원</span>
+            </li>
+            <li>- 적 용 원 가 : <span id='yongdo_price_tot_s'></span> 원</li>
+            <li>- 적 용 원 가 (건축사의 업무범위와 대가기준 + 보정요율 적용)</li>
+            <li>
+              <table class="table_01">
+                <colgroup>
+                  <col width="30%">
+                  <col width="">
+                  <col width="25%">
+                </colgroup>
+                <tr>
+                  <th>공 사 비</th>
+                  <th>설 계 비   요 율</th>
+                  <th>비  고</th>
+                </tr>
+                <tr>
+                  <td><span id='expense_construction_min'>&nbsp;</span></td>
+                  <td><span id='supervising_expenses_min'>&nbsp;</span></td>
+                  <td><span>&nbsp;</span></td>
+                </tr>
+                <tr>
+                  <td><span id='expense_construction_max'>&nbsp;</span></td>
+                  <td><span id='supervising_expenses_max'>&nbsp;</span></td>
+                  <td><span>&nbsp;</span></td>
+                </tr>
+              </table>
+            </li>
+            <li>- 건축공사 설계비요율 (직선보간법에 의함)</li>
+            <li>
+              <table class="table_02">
+                <tr>
+                  <td rowspan='3' width='15%'>
+                    <span id='supervising_expenses_min2'>&nbsp;</span>
+                    <span style='padding:0 15px;'>-</span>
+                  </td>
+                  <td style='border-bottom: 1px solid #000; text-align:center;'>
+                    ( <span id='yongdo_price_tot_ss'>&nbsp;</span> -
+                    <span id='expense_construction_min2'>&nbsp;</span>
+                    ) * ( <span id='supervising_expenses_min3'>&nbsp;</span> -
+                    <span id='supervising_expenses_max2'>&nbsp;</span> )
+                  </td>
+                  <td rowspan='3' width='20%'>
+                    <span style='padding:0 15px;'>=</span>
+                    <span id='cs_tot'>&nbsp;</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td style='text-align:center;'>
+                    ( <span id='expense_construction_max2'>&nbsp;</span> - <span id='expense_construction_min3'>&nbsp;</span> )
+                  </td>
+                </tr>
+              </table>
+            </li>
+            <li>- 설계비 보정요율</li>
+            <li>
+              <div style="text-align:center;">
+                <span id='cs_tot2'> </span>   *   <span id="cor"> </span>   =   <span id="cs_cor"> </span>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div style='margin-top:20px;'>
+          <ul>
+            <li class='gtd'>설계비 산출</li>
+            <li>건축공사 설계비 : <span id='yongdo_price_tot_sss'>&nbsp</span> * <span id='cs_cor2'>&nbsp</span>&#37;  =  <span class='cs_price_la'>&nbsp</span> 원  &nbsp; (<span style="color:red;">건축공사 설계비 최소 단가입니다.</span>)</li>
+          </ul>
+        </div>
+        <div style="text-align:center;">
+          <div style='color:#000; font-weight:600; padding:10px 25px; display:inline-block; border:1px solid #000; background-color:#f7ff72; ' class="price_area">
+            ※ 건축공사설계비 <span id='cs_price_la2'></span> 원 (천단위이하 절사, VAT 별도)
+          </div>
+        </div>
+        <div style='margin-top:20px;'>
+          <ul>
+            <li class="gtd">추가업무 비용 산출</li>
+            <div id="additional_work_list2">
+            </div>
+          </ul>
+        </div>
+        <div style='text-align:center;'>
+          <div style='color:#000; font-weight:600; padding:10px 25px; display:inline-block; border:1px solid #000; background-color:#f7ff72; ' class="price_area">
+            ※ 추가업무 비용 <span id='etc_price2'></span> 원 (천단위이하 절사, VAT 별도)
+          </div>
+        </div>
+        <div style='margin-top:20px;'>
+          <ul>
+            <li class='gtd'>합 계</li>
+            <li>설계비 합계 : <span id='total2'>&nbsp</span> + <span id='total1'>&nbsp</span>  =  <span id='total3'>&nbsp</span> 원</li>
+          </ul>
+        </div>
+        <div style='text-align:center;'>
+          <div style='color:#000; font-weight:600; padding:10px 25px; display:inline-block; border:1px solid #000; background-color:#f7ff72; ' class="price_area">
+            ※　설계비 합계　<span id='total4'></span> 원 (천단위이하 절사, VAT 별도)
+          </div>
+        </div>
+      </div>
+      <!-- 프린트 하단 끝 -->
+      <div style='width:200px; margin:30px auto;'>
+        <div id="pagePrint">설계비 산정 내역 인쇄</div>
+      </div>
+      <div class="explain" style='margin-top:80px; padding-top:50px; border-top:1px dashed #000;'>
+        <div class="title">
+          설계비 산정방법 설명
+        </div>
+        <div class="box">
+          <ul>
+            <li class="t1">설계비 = 총공사비1) × 요율2)</li>
+            <li>
+              <p>1) 총공사비 = 용도별 건축비*[별표 참조] × 공사면적**(실제시공면적)</p>
+              <span>* 용도별건축비는 2022년도 한국부동산원의 건물신축단가를 기준으로 평균한 것임.</span>
+              <span>** 공사면적은 연면적에 필로티, 발코니, 옥탑, 다락 등을 합계한 실제 시공면적을 말함.</span>
+            </li>
+            <li>
+              <p>2) 요율</p>
+              <span>∘ 공공발주사업에 대한 건축사의 업무범위와 대가기준 '[별표4]건축설계 대가요율'</span>
+              <span>∘ 공사비가 [별표4]에서 규정한 공사비의 중간에 있는 경우에는 직선보간법에 따라서 산정</span>
+              <img src="{{ url_for('static', filename='img1.gif') }}" width="321" height="138">
+            </li>
+          </ul>
+        </div>
+        <div class="box">
+          <ul>
+            <li class="t1">한국부동산원 2022년도 건물신축단가표용도별 평균값</li>
+            <li>
+              <p>「건축법」제25조제12항 및 표준조례(안) 운영지침*과 관련하여 감리비용 산출시 참고 가능한 공사비를 다음과 같이 알려드립니다.</p>
+              <p>* 표준조례(안) 운영지침 : 비상주감리의 공사비 산정 시 공사내역서 또는 한국부동산원 건물신축단가표 용도별 평균값을 적용할 수 있다.</p>
+            </li>
+            <li>
+              <table>
+                <colgroup>
+                  <col width="35%">
+                  <col width="">
+                </colgroup>
+                <tr>
+                  <th>용도</th>
+                  <th>공사비 (원/㎡)</th>
+                </tr>
+                <tr>
+                  <td>아파트</td>
+                  <td>1,564,630</td>
+                </tr>
+                <tr>
+                  <td>연립주택</td>
+                  <td>1,902,800</td>
+                </tr>
+                <tr>
+                  <td>다세대주택</td>
+                  <td>1,639,088</td>
+                </tr>
+                <tr>
+                  <td>다가구주택</td>
+                  <td>1,651,588</td>
+                </tr>
+                <tr>
+                  <td>근린생활시설</td>
+                  <td>1,567,446</td>
+                </tr>
+                <tr>
+                  <td>창고</td>
+                  <td>699,500</td>
+                </tr>
+                <tr>
+                  <td>공장</td>
+                  <td>867,125</td>
+                </tr>
+                <tr>
+                  <td>다중주택</td>
+                  <td>1,680,755</td>
+                </tr>
+                <tr>
+                  <td>오피스텔</td>
+                  <td>1,641,879</td>
+                </tr>
+              </table>
+              <span style='margin:8px 0 0 0'>※ 그 밖의 건축물은 유사한 용도를 참조하여 적용(㎡기준임)</span>
+            </li>
+          </ul>
+        </div>
+        <div class="box">
+          <ul>
+            <li class="t1">공공발주사업에 대한 건축사의 업무범위와 대가기준 '[별표4]건축설계 대가요율' <span style='font-weight:normal; float:right; margin:7px 0 0;'>(단위 : %)</span></li>
+            <li>
+              <table>
+                <colgroup>
+                  <col width="">
+                  <col width="">
+                  <col width="8%">
+                  <col width="8%">
+                  <col width="8%">
+                  <col width="8%">
+                  <col width="8%">
+                  <col width="8%">
+                  <col width="8%">
+                  <col width="8%">
+                  <col width="8%">
+                </colgroup>
+                <tr>
+                  <th rowspan="2">공 사 비</th>
+                  <th >종 별</th>
+                  <th colspan="3">제3종(복잡)</th>
+                  <th colspan="3">제2종(보통)</th>
+                  <th colspan="3">제1종(단순)</th>
+                </tr>
+                <tr>
+                  <!-- td 1 -->
+                  <td>도서의양</td>
+                  <td>상급</td>
+                  <td>중급</td>
+                  <td>기본</td>
+                  <td>상급</td>
+                  <td>중급</td>
+                  <td>기본</td>
+                  <td>상급</td>
+                  <td>중급</td>
+                  <td>기본</td>
+                </tr>
+                <tr>
+                  <td colspan="2">5000만원 이하</td>
+                  <td>12.55</td>
+                  <td>10.46</td>
+                  <td>8.36</td>
+                  <td>11.41</td>
+                  <td>9.51</td>
+                  <td>7.61</td>
+                  <td>10.22</td>
+                  <td>8.51</td>
+                  <td>6.81</td>
+                </tr>
+                <tr>
+                  <td colspan="2">1억원</td>
+                  <td>11.48</td>
+                  <td>9.56</td>
+                  <td>7.65</td>
+                  <td>10.43</td>
+                  <td>8.69</td>
+                  <td>6.95</td>
+                  <td>9.38</td>
+                  <td>7.82</td>
+                  <td>6.25</td>
+                </tr>
+                <tr>
+                  <td colspan="2">2억원</td>
+                  <td>9.99</td>
+                  <td>8.33</td>
+                  <td>6.66</td>
+                  <td>9.08</td>
+                  <td>7.57</td>
+                  <td>6.05</td>
+                  <td>8.16</td>
+                  <td>6.8</td>
+                  <td>5.44</td>
+                </tr>
+                <tr>
+                  <td colspan="2">3억원</td>
+                  <td>8.68</td>
+                  <td>7.23</td>
+                  <td>5.78</td>
+                  <td>7.88</td>
+                  <td>6.57</td>
+                  <td>5.26</td>
+                  <td>7.08</td>
+                  <td>5.9</td>
+                  <td>4.72</td>
+                </tr>
+                <tr>
+                  <td colspan="2">5억원</td>
+                  <td>7.9</td>
+                  <td>6.58</td>
+                  <td>5.26</td>
+                  <td>7.18</td>
+                  <td>5.98</td>
+                  <td>4.79</td>
+                  <td>6.46</td>
+                  <td>5.38</td>
+                  <td>4.3</td>
+                </tr>
+                <tr>
+                  <td colspan="2">10억원</td>
+                  <td>7.03</td>
+                  <td>5.86</td>
+                  <td>4.68</td>
+                  <td>6.39</td>
+                  <td>5.32</td>
+                  <td>4.26</td>
+                  <td>5.75</td>
+                  <td>4.79</td>
+                  <td>3.83</td>
+                </tr>
+                <tr>
+                  <td colspan="2">20억원</td>
+                  <td>6.22</td>
+                  <td>5.19</td>
+                  <td>4.15</td>
+                  <td>5.66</td>
+                  <td>4.72</td>
+                  <td>3.77</td>
+                  <td>5.09</td>
+                  <td>4.24</td>
+                  <td>3.4</td>
+                </tr>
+                <tr>
+                  <td colspan="2">30억원</td>
+                  <td>5.91</td>
+                  <td>4.93</td>
+                  <td>3.94</td>
+                  <td>5.38</td>
+                  <td>4.48</td>
+                  <td>3.58</td>
+                  <td>4.84</td>
+                  <td>4.03</td>
+                  <td>3.23</td>
+                </tr>
+                <tr>
+                  <td colspan="2">50억원</td>
+                  <td>5.72</td>
+                  <td>4.76</td>
+                  <td>3.81</td>
+                  <td>5.2</td>
+                  <td>4.33</td>
+                  <td>3.46</td>
+                  <td>4.68</td>
+                  <td>3.9</td>
+                  <td>3.12</td>
+                </tr>
+                <tr>
+                  <td colspan="2">100억원</td>
+                  <td>5.58</td>
+                  <td>4.65</td>
+                  <td>3.72</td>
+                  <td>5.07</td>
+                  <td>4.22</td>
+                  <td>3.38</td>
+                  <td>4.56</td>
+                  <td>3.8</td>
+                  <td>3.04</td>
+                </tr>
+                <tr>
+                  <td colspan="2">200억원</td>
+                  <td>5.42</td>
+                  <td>4.51</td>
+                  <td>3.61</td>
+                  <td>4.92</td>
+                  <td>4.1</td>
+                  <td>3.28</td>
+                  <td>4.43</td>
+                  <td>3.69</td>
+                  <td>2.96</td>
+                </tr>
+                <tr>
+                  <td colspan="2">300억원</td>
+                  <td>5.32</td>
+                  <td>4.44</td>
+                  <td>3.55</td>
+                  <td>4.84</td>
+                  <td>4.03</td>
+                  <td>3.23</td>
+                  <td>4.36</td>
+                  <td>3.63</td>
+                  <td>2.91</td>
+                </tr>
+                <tr>
+                  <td colspan="2">500억원</td>
+                  <td>5.25</td>
+                  <td>4.38</td>
+                  <td>3.5</td>
+                  <td>4.77</td>
+                  <td>3.98</td>
+                  <td>3.18</td>
+                  <td>4.3</td>
+                  <td>3.58</td>
+                  <td>2.87</td>
+                </tr>
+                <tr>
+                  <td colspan="2">1000억원</td>
+                  <td>5.14</td>
+                  <td>4.29</td>
+                  <td>3.43</td>
+                  <td>4.68</td>
+                  <td>3.9</td>
+                  <td>3.12</td>
+                  <td>4.21</td>
+                  <td>3.5</td>
+                  <td>2.8</td>
+                </tr>
+                <tr>
+                  <td colspan="2">2000억원</td>
+                  <td>5.06</td>
+                  <td>4.22</td>
+                  <td>3.38</td>
+                  <td>4.6</td>
+                  <td>3.84</td>
+                  <td>3.07</td>
+                  <td>4.14</td>
+                  <td>3.45</td>
+                  <td>2.76</td>
+                </tr>
+                <tr>
+                  <td colspan="2">3000억원</td>
+                  <td>5.01</td>
+                  <td>4.17</td>
+                  <td>3.34</td>
+                  <td>4.55</td>
+                  <td>3.79</td>
+                  <td>3.03</td>
+                  <td>4.1</td>
+                  <td>3.42</td>
+                  <td>2.73</td>
+                </tr>
+                <tr>
+                  <td colspan="2">5000억원</td>
+                  <td>4.93</td>
+                  <td>4.11</td>
+                  <td>3.28</td>
+                  <td>4.48</td>
+                  <td>3.73</td>
+                  <td>2.99</td>
+                  <td>4.03</td>
+                  <td>3.36</td>
+                  <td>2.69</td>
+                </tr>
+              </table>
+              <span style='margin:8px 0 0 0'>주) "공사비"라 함은 건축주의 공사비 총예정금액(자재대 포함)중 용지비, 보상비, 법률수속비 및 부가가치세를 제외한 일체의 금액을 말한다.</span>
+            </li>
+          </ul>
+        </div>
+        <div class="box">
+          <ul>
+            <li class="t1">[별표 3] 건축물의 종별 구분</li>
+            <li>
+              <table>
+                <colgroup>
+                  <col width="25%">
+                  <col width="">
+                </colgroup>
+                <tr>
+                  <th>종 별</th>
+                  <th>건축물의 종류</th>
+                </tr>
+                <tr>
+                  <td>1 종<br />(단순)</td>
+                  <td style='text-align:left; padding-left:25px;'>
+                    - 가설건축물
+                    - 창고시설(하역장)<br />
+                    - 자동차관련시설(정비공장, 운전학원·정비학원 제외)<br />
+                    - 동물 및 식물관련시설(가축용 창고, 관리사, 가축시장, 버섯재배사) <br />
+                    - 기타 제1종 용도와 유사한 것<br />
+                    ※ 제1종 시설로서 공기조화 설비 등 특수설비를 요하는 시설은 제2종을 적용<br />
+                  </td>
+                </tr>
+                <tr>
+                  <td>2 종<br />(보통)</td>
+                  <td style='text-align:left; padding-left:25px;'>
+                    - 공작물(굴뚝·옹벽·고가수조 등)<br />
+                    - 단독주택<br />
+                    - 공동주택<br />
+                    - 제1종 근린생활시설<br />
+                    - 제2종 근린생활시설<br />
+                    - 판매시설<br />
+                    - 장례식장<br />
+                    - 교육연구시설(도서관 제외)<br />
+                    - 노유자시설<br />
+                    - 수련시설<br />
+                    - 업무시설<br />
+                    - 숙박시설(관광숙박시설 제외)<br />
+                    - 위락시설<br />
+                    - 공장<br />
+                    - 창고시설(냉장·냉동창고 포함)<br />
+                    - 위험물저장 및 처리시설<br />
+                    - 자동차 관련시설(정비공장, 운전학원,정비학원)<br />
+                    - 동물 및 식물관련시설<br />
+                    - 분뇨 및 쓰레기처리시설<br />
+                    - 교정 및 군사시설<br />
+                    - 묘지관련시설(화장장 제외)<br />
+                    - 관광휴게시설(관망탑 제외)<br />
+                    - 기타 제2종 용도와 유사한 것<br />
+                    ※ 제2종 시설로서 특수구조 또는 공기조화 설비 등 특수설비를 요하는  시설은 제3종을 적용<br />
+                  </td>
+                </tr>
+                <tr>
+                  <td>3 종<br />(보통)</td>
+                  <td style='text-align:left; padding-left:25px;'>
+                    - 문화 및 집회시설<br />
+                    - 운수시설(철도시설, 공항시설, 항만시설, 종합여객 시설 등) <br />
+                    - 의료시설<br />
+                    - 교육연구시설 중 도서관<br />
+                    - 운동시설<br />
+                    - 숙박시설 중 관광숙박시설<br />
+                    - 발전시설(발전소, 집단에너지 공급시설 포함)<br />
+                    - 방송통신시설(방송·통신시설, 촬영시설)<br />
+                    - 묘지관련시설 중 화장장<br />
+                    - 관광휴게시설 중 관망탑<br />
+                    - 기타 제3종 용도와 유사한 것<br />
+                  </td>
+                </tr>
+              </table>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!--suppress CheckValidXmlInScriptTagBody-->
+    <script>
+      $(document).ready(function(){
+      $("#correction").change(function() {
+      if($("#correction").val() == "direct") {
+      $("#selboxDirect").attr("disabled", false);
+      }  else {
+      $("#selboxDirect").val("");
+      $("#selboxDirect").attr("disabled", true);
+      }
+      });
+      
+      document.getElementById("additional_work_add").onclick = function() {
+      var additional_work_select = $("#additional_work_select").val();
+      var additional_work_cost = $("#additional_work_cost").val();
+      var list_count = document.getElementById("additional_work_list").childElementCount;
+      var list = document.getElementById("additional_work_list");
+      var list2 = document.getElementById("additional_work_list2");
+      
+      if (additional_work_cost != "" && additional_work_select != ""){
+      if (document.getElementById(additional_work_select)){
+      	if (!isNaN(additional_work_cost)) { additional_work_cost = parseFloat(additional_work_cost); }
+      	document.getElementById(additional_work_select).lastChild.innerText = additional_work_cost.toLocaleString();
+      } else {
+      	if (!isNaN(additional_work_cost)) { 
+          additional_work_cost = parseFloat(additional_work_cost) * 10000; 
         }
-
-        // 프린트 시작
-        $('#pagePrint').click(function() {
-            $('#print_table_01').show();
-
-            $("#yongdo_select_print").text($("#yongdo_select").val());
-
-            $('#classification_select_print').text($("#classification_select option:selected").text());
-
-            $('#area_print').text($('#area').val());
-            $('#area_other_print').text($('#area_other').val());
-            $('#area_tot_print').text($("#area_tot").val());
-
-            if(document.getElementById("correction").value == 'direct') {
-            	var correction = $("#selboxDirect").val();
-            } else {
-            	var correction = $("#correction").val();
-            }
-            $('#correction_print').text(correction);
-
-			var list = document.getElementById("additional_work_list");
-			var list2 = document.getElementById("additional_work_select_print");
-			list2.innerHTML = "";
-			const clone_list = list.innerText.replace(/　/g, '<br />');
-
-			list2.innerHTML = clone_list;
-
-
-			$('#print_table_00, #print_table_01, #print_table_02').printThis({
-				importCSS: true,
-                importStyle: true, //thrown in for extra measure
-				loadCSS: ["static/style.css", "static/print.css"]
-			});
-        });
-        //프린트 끝
-    });
-</script>
-</body>
+      	var added_work = '<li id="' +additional_work_select+'">' +additional_work_select+ ': <span id="additional_work_' +list_count+ '">'+ additional_work_cost.toLocaleString().toLocaleString() +'　</span></li>';
+      	list.innerHTML += added_work;
+      }
+      }
+      list2.innerHTML = "";
+      const clone_list = list.innerText.replace(/　/g, '<br />');
+      
+      list2.innerHTML = clone_list;
+      yongdo();
+        $("#additional_work_select").val("");
+        $("#additional_work_cost").val("");
+      }
+      
+      document.getElementById("additional_work_del").onclick = function() {
+      var list = document.getElementById("additional_work_list");
+      var list2 = document.getElementById("additional_work_list2");
+      list.innerHTML = "";
+      list2.innerHTML = "";
+      yongdo();
+      }
+      
+      
+          $("#area").keyup(function(){
+              $(this).val( $(this).val().replace(/[^\.0-9]/g, '') );
+              if(!$("#area_other").val() && $("#area_other").val() != "0")
+                  $("#area_other").val("0");
+              yongdo();
+          });
+      
+          $("#area_other").keyup(function(){
+              $(this).val( $(this).val().replace(/[^\.0-9]/g, '') );
+              yongdo();
+          });
+      
+          $('#yongdo_select').change(function(){
+              yongdo();
+          });
+      
+          $('#classification_select').change(function(){
+              yongdo();
+          });
+      
+          $('#correction').change(function(){
+              yongdo();
+          });
+      
+          $('#selboxDirect').keyup(function(){
+              yongdo();
+          });
+      
+      
+          function yongdo(){
+              var area = $('#area').val();
+              var area_other = $('#area_other').val();
+              var use = $("#yongdo_select").val();
+              var type = $("#classification_select").val();
+              if(document.getElementById("correction").value == 'direct') {
+              	var correction = $("#selboxDirect").val();
+              } else {
+              	var correction = $("#correction").val();
+              }
+      
+      
+      
+              $('#cs_tot').text(''); // 적용 요율
+              $('#cs_tot2').text('');
+              $('.cs_price_la').text(''); // 감리비
+              $('#cs_price_la2').text(''); // 감리비 천원단위 절사
+              $("#etc_price").text('');
+              $("#etc_price2").text('');
+      
+              if(area && area_other)
+              {
+                  var totarea = parseFloat(area) + parseFloat(area_other);
+                  $("#area_tot").val(totarea);
+                  if(use && type && correction)
+                  {
+                      $.ajax({
+                          url:"{{ url_for('main.cal') }}",
+                          type:'POST',
+                          dataType:'json',
+                          data: {
+                              use : use,
+                              area : totarea,
+                              type : type,
+                              cor : correction,
+                              mode : 2022
+                          },
+                          success:function(data){
+                              $('#area_tot').val(totarea.toLocaleString());
+                              $('#expense_construction_price').text(data.use_cost.toLocaleString()); // 단가
+                              $('#area_tot_s').text(totarea.toLocaleString()); // 총면적
+      
+                              $('#yongdo_price_tot').text(data.cstrt_cost.toLocaleString()); // 적용공사비
+                              $('#yongdo_price_tot_s').text(data.cstrt_cost.toLocaleString()); // 적용원가
+                              $('#yongdo_price_tot_ss').text(data.cstrt_cost.toLocaleString());
+                              $('#yongdo_price_tot_sss').text(data.cstrt_cost.toLocaleString());
+      
+                              $('#expense_construction_min').text(data.cstrt_cost_min.toLocaleString()); // 작은금액
+                              $('#expense_construction_min2').text(data.cstrt_cost_min.toLocaleString());
+                              $('#expense_construction_min3').text(data.cstrt_cost_min.toLocaleString());
+      
+                              $('#expense_construction_max').text(data.cstrt_cost_max.toLocaleString()); // 큰금액
+                              $('#expense_construction_max2').text(data.cstrt_cost_max.toLocaleString());
+      
+                              $('#supervising_expenses_min').text(data.type_rate_min); // 작은금액 요율
+                              $('#supervising_expenses_min2').text(data.type_rate_min);
+                              $('#supervising_expenses_min3').text(data.type_rate_min);
+      
+                              $('#supervising_expenses_max').text(data.type_rate_max); // 큰금액 요율
+                              $('#supervising_expenses_max2').text(data.type_rate_max);
+      
+                              $('#cs_tot').text(data.rate_result); // 보정 미적용 요율
+                              $('#cs_tot2').text(data.rate_result);
+      
+                              $('#cs_cor').text(data.cor_result); // 보정 적용 요율
+                              $('#cs_cor2').text(data.cor_result);
+                              
+                              $('#cor').text(correction);
+      
+                              $('.cs_price_la').text(data.cs_cost.toLocaleString()); // 설계비
+                              $('#cs_price_la2').text(data.cs_cost2.toLocaleString()); // 설계비 천원단위 절사
+      
+                              // 기타 용역비
+                              var added = $("#additional_work_list").children().length;
+                              var etc_prices = [];
+                              var etc_price = 0;
+      
+                              for (var i = 0; i < added; i++) {
+                              	console.log(i+"번째");
+                              	console.log($("#additional_work_" + i).text());
+                              	etc_prices.push($("#additional_work_" + i).text());
+                              }
+                             	console.log('각 비용' + etc_prices);
+                              etc_price = parseFloat(etc_price);
+                              etc_prices.forEach( (item) => {
+                              	item = item.replace(/\,/g, '');
+                              	if (!isNaN(item)){
+                              		etc_price += parseFloat(item);
+                              	}
+                              });
+                              console.log('합계' + etc_price);
+                              var etc_price2 = Math.floor(etc_price / 1000) * 1000; // 천단위 절사
+                              $("#etc_price").text(etc_price.toLocaleString());
+                              $("#etc_price2").text(etc_price2.toLocaleString());
+      
+                              //합계
+                              $("#total1").text(etc_price2.toLocaleString());
+                              $("#total2").text(data.cs_cost2.toLocaleString());
+                              var total = etc_price2 + data.cs_cost2;
+                              $("#total3").text(total.toLocaleString());
+                              $("#total4").text(total.toLocaleString());
+                          },
+                          error:function(xhr,status,error){
+                              alert(xhr.status);
+                          }
+                      });
+                  }
+              }
+          }
+      
+          // 프린트 시작
+          $('#pagePrint').click(function() {
+              $('#print_table_01').show();
+      
+              $("#yongdo_select_print").text($("#yongdo_select").val());
+      
+              $('#classification_select_print').text($("#classification_select option:selected").text());
+      
+              $('#area_print').text($('#area').val());
+              $('#area_other_print').text($('#area_other').val());
+              $('#area_tot_print').text($("#area_tot").val());
+      
+              if(document.getElementById("correction").value == 'direct') {
+              	var correction = $("#selboxDirect").val();
+              } else {
+              	var correction = $("#correction").val();
+              }
+              $('#correction_print').text(correction);
+      
+      var list = document.getElementById("additional_work_list");
+      var list2 = document.getElementById("additional_work_select_print");
+      list2.innerHTML = "";
+      const clone_list = list.innerText.replace(/　/g, '<br />');
+      
+      list2.innerHTML = clone_list;
+      
+      
+      $('#print_table_00, #print_table_01, #print_table_02').printThis({
+            debug: false,
+         importCSS: true,
+            importStyle: true, //thrown in for extra measure
+         loadCSS: ["static/style.css", "static/print.css"]
+      });
+          });
+          //프린트 끝
+      });
+    </script>
+  </body>
 </html>
